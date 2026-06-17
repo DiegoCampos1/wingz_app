@@ -5,6 +5,7 @@ file is read when present (development); in Docker the values are injected by
 the container environment.
 """
 
+import importlib.util
 from datetime import timedelta
 from pathlib import Path
 
@@ -51,6 +52,16 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+# django-silk: optional, dev-only request/SQL profiler exposed at /silk/. Enabled
+# only when DJANGO_ENABLE_SILK is truthy AND the package is installed, so toggling
+# the flag on a lean production image (without silk) degrades gracefully.
+SILK_ENABLED = (
+    env.bool("DJANGO_ENABLE_SILK", default=False) and importlib.util.find_spec("silk") is not None
+)
+if SILK_ENABLED:
+    INSTALLED_APPS.append("silk")
+    MIDDLEWARE.insert(0, "silk.middleware.SilkyMiddleware")
 
 ROOT_URLCONF = "config.urls"
 

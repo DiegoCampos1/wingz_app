@@ -16,6 +16,7 @@ small number of SQL queries even as the data grows.
 - [API reference](#api-reference)
 - [Running the tests](#running-the-tests)
 - [Linting & formatting](#linting--formatting)
+- [Query profiling (dev)](#query-profiling-dev)
 - [Bonus: reporting SQL](#bonus-reporting-sql)
 - [Architecture & design decisions](#architecture--design-decisions)
 - [Project structure](#project-structure)
@@ -189,6 +190,33 @@ make lint               # check
 make format             # auto-fix + format
 make precommit-install  # run Ruff automatically on every commit
 ```
+
+---
+
+## Query profiling (dev)
+
+[django-silk](https://github.com/jazzband/django-silk) is bundled as an optional,
+**dev-only** profiler that records the SQL query count (and the exact SQL) for each request —
+handy for confirming the Ride List runs in 3 queries. It is disabled by default and gated
+behind an env flag, so it never runs in production.
+
+```bash
+# in .env
+DJANGO_ENABLE_SILK=1
+
+docker compose up --build   # installs silk and migrates its tables
+```
+
+Call any endpoint (e.g. `GET /api/rides/`), then open the profiler at
+`http://localhost:8000/silk/`: each request is listed with its query count — click a request
+and open the **SQL** tab to inspect the individual queries. Leave `DJANGO_ENABLE_SILK=0` (the
+default) for normal use; the test suite always runs with silk off.
+
+> An authenticated `GET /api/rides/` shows **4** queries in silk: one is JWT authentication
+> loading the user from the token, and the other **3** are the Ride List itself — the `COUNT`,
+> the rides with `rider`/`driver` joined via `select_related`, and the prefetched today's
+> events. The query-count test isolates the view (via `force_authenticate`) to assert exactly
+> those 3.
 
 ---
 

@@ -4,3 +4,4 @@ pre-commit>=3.7
 pytest>=8.0
 pytest-django>=4.8
 factory-boy>=3.3
+django-silk>=5.1

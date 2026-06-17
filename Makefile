@@ -4,8 +4,9 @@ install-dev:
 	pip install -r requirements-dev.txt
 
 # Run the test suite inside an ephemeral container (installs dev deps, needs the db service).
+# Silk is forced off so its middleware never perturbs the query-count assertions.
 test:
-	docker compose run --rm --entrypoint sh web -c "pip install -q -r requirements-dev.txt && pytest"
+	docker compose run --rm -e DJANGO_ENABLE_SILK=0 --entrypoint sh web -c "pip install -q -r requirements-dev.txt && pytest"
 
 lint:
 	ruff check .

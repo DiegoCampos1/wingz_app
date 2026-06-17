@@ -16,7 +16,11 @@ services:
       - "5432:5432"
 
   web:
-    build: .
+    build:
+      context: .
+      args:
+        # Local/dev image includes test + profiling deps (pytest, ruff, django-silk).
+        INSTALL_DEV: "true"
     env_file: .env
     depends_on:
       db:

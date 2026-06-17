@@ -1,5 +1,6 @@
 """Root URL configuration for the Wingz Ride Management API."""
 
+from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
@@ -24,3 +25,7 @@ urlpatterns = [
     path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"),
     path("api/", include(router.urls)),
 ]
+
+if settings.SILK_ENABLED:
+    # Dev-only request/SQL profiler UI.
+    urlpatterns.append(path("silk/", include("silk.urls", namespace="silk")))
