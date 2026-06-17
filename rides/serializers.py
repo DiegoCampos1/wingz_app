@@ -70,10 +70,14 @@ class RideListSerializer(serializers.ModelSerializer):
 
     @extend_schema_field(serializers.FloatField(allow_null=True))
     def get_distance(self, obj):
-        # Populated only when the queryset is annotated with a PostGIS Distance
-        # (i.e. when sorting by distance); meters, or null otherwise.
+        # Populated only when the queryset is annotated with the distance to a
+        # target point (i.e. when sorting by distance): meters, or null otherwise.
         distance = getattr(obj, "distance", None)
-        return distance.m if distance is not None else None
+        if distance is None:
+            return None
+        # The KNN (<->) annotation yields a float (meters); a GeoDjango Distance
+        # object would expose .m. Support both for robustness.
+        return distance.m if hasattr(distance, "m") else float(distance)
 
 
 class RideWriteSerializer(StrictFieldsModelSerializer):
