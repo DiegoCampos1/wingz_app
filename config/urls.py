@@ -3,6 +3,7 @@
 Only foundation routes are wired here. Business endpoints (users, rides,
 ride-events) and the JWT auth routes are added in later commits.
 """
+
 from django.contrib import admin
 from django.urls import path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView

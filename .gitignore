@@ -22,6 +22,9 @@ media/
 .coverage
 htmlcov/
 
+# Tooling
+.ruff_cache/
+
 # IDE / OS
 .vscode/
 .DS_Store

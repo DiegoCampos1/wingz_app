@@ -6,6 +6,7 @@ project's ``AUTH_USER_MODEL`` so authentication and authorization share a
 single source of truth. Email is used as the login identifier (the brief has
 no username field).
 """
+
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models

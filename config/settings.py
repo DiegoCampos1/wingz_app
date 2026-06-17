@@ -4,6 +4,7 @@ Configuration is environment-driven via ``django-environ``. A local ``.env``
 file is read when present (development); in Docker the values are injected by
 the container environment.
 """
+
 from datetime import timedelta
 from pathlib import Path
 

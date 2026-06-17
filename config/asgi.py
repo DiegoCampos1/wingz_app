@@ -1,4 +1,5 @@
 """ASGI config for the Wingz Ride Management API."""
+
 import os
 
 from django.core.asgi import get_asgi_application

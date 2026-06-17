@@ -1,4 +1,5 @@
 """Admin configuration for the custom email-based user model."""
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 
