@@ -1,4 +1,4 @@
-.PHONY: install-dev lint format precommit-install precommit-run test
+.PHONY: install-dev lint format precommit-install precommit-run test seed
 
 install-dev:
 	pip install -r requirements-dev.txt
@@ -21,3 +21,7 @@ precommit-install:
 
 precommit-run:
 	pre-commit run --all-files
+
+# Load demo data (idempotent). Use `make seed ARGS="--flush --rides 1000"` to customize.
+seed:
+	docker compose exec web python manage.py seed_demo $(ARGS)

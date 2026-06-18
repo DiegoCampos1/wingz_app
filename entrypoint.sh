@@ -11,5 +11,10 @@ echo "PostgreSQL is ready."
 # Apply database migrations.
 python manage.py migrate --noinput
 
+# Optionally load demo data (dev only). Idempotent: a no-op if rides already exist.
+if [ "${DJANGO_SEED_DEMO:-0}" = "1" ]; then
+  python manage.py seed_demo
+fi
+
 # Hand off to the container command (dev server, gunicorn, etc.).
 exec "$@"

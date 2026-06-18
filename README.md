@@ -11,6 +11,7 @@ small number of SQL queries even as the data grows.
 
 - [Tech stack](#tech-stack)
 - [Quick start (Docker)](#quick-start-docker)
+- [Demo data](#demo-data)
 - [Environment variables](#environment-variables)
 - [Authentication & roles](#authentication--roles)
 - [API reference](#api-reference)
@@ -59,6 +60,31 @@ The API is now at `http://localhost:8000/`.
 - Django admin: `http://localhost:8000/admin/`
 
 Stop the stack with `docker compose down` (add `-v` to also drop the database volume).
+
+---
+
+## Demo data
+
+To populate realistic demo data (~500 rides with events, a pool of riders/drivers, and two known
+login users), run the seed command:
+
+```bash
+make seed                                  # ~500 rides; no-op if rides already exist
+make seed ARGS="--flush --rides 1000"      # wipe and re-seed with a custom volume
+# equivalently: docker compose exec web python manage.py seed_demo --flush --rides 1000
+```
+
+It can also run automatically on startup (dev only): set `DJANGO_SEED_DEMO=1` in `.env` before
+`docker compose up`. It is idempotent, so it never duplicates data on restarts.
+
+The seed creates two known users:
+
+| Role | Email | Password |
+|------|-------|----------|
+| admin | `admin@example.com` | `AdminPass123` |
+| non-admin (rider) | `rider@example.com` | `RiderPass123` |
+
+The non-admin is handy for demonstrating that only admins may call the API (it receives `403`).
 
 ---
 
