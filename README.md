@@ -286,6 +286,10 @@ Month     Driver                Count of Trips > 1 hr
 2024-02   Chris H               1
 ```
 
+The command also writes a timestamped JSON copy under `output/`
+(e.g. `output/trips_over_one_hour_2026-06-18_2130.json`) so the result is easy to share or
+inspect outside the terminal.
+
 > The query assumes one pickup and one dropoff event per ride (per the brief). If a ride
 > could have duplicate status events, swap the self-joins for a per-ride aggregate using
 > `min(created_at) FILTER (WHERE description = ...)` (noted inside the `.sql` file).

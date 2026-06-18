@@ -1,5 +1,6 @@
 """Tests for the bonus reporting SQL (trips longer than one hour)."""
 
+import json
 from datetime import UTC, datetime, timedelta
 from io import StringIO
 
@@ -45,10 +46,14 @@ def test_report_sql_counts_trips_over_one_hour(report_data):
     assert rows == [("2024-01", "Chris H", 2), ("2024-02", "Chris H", 1)]
 
 
-def test_report_management_command_runs(report_data):
+def test_report_management_command_writes_json(report_data, tmp_path):
     out = StringIO()
-    call_command("trips_over_one_hour", stdout=out)
+    call_command("trips_over_one_hour", stdout=out, output_dir=str(tmp_path))
     output = out.getvalue()
-    assert "Chris H" in output
-    assert "2024-01" in output
-    assert "2024-02" in output
+    assert "Chris H" in output and "2024-01" in output and "2024-02" in output
+
+    files = list(tmp_path.glob("trips_over_one_hour_*.json"))
+    assert len(files) == 1
+    payload = json.loads(files[0].read_text())
+    assert payload["count"] == 2
+    assert {"month": "2024-01", "driver": "Chris H", "trips_over_one_hour": 2} in payload["rows"]

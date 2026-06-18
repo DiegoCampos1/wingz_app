@@ -25,6 +25,9 @@ htmlcov/
 # Tooling
 .ruff_cache/
 
+# Generated report artifacts
+output/
+
 # IDE / OS
 .vscode/
 .DS_Store
